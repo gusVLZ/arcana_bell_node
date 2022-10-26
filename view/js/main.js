@@ -50,6 +50,7 @@ var lastLog = null;
             contentType: 'application/json',
             url: window.location.origin + "/api/notification/send",
             data:JSON.stringify({
+                topic: "bell_01n8Iz8umWKvSZxe9ANH",
                 title: "ArcanaBell",
                 message:"Algum visitante se encontra na entrada principal"
             }),
@@ -77,6 +78,7 @@ var lastLog = null;
             contentType: 'application/json',
             url: window.location.origin + "/api/notification/send",
             data:JSON.stringify({
+                topic: "bell_3xtP3wPWdUHWasGNyUFG",
                 title: "ArcanaBell",
                 message:"Algum visitante se encontra na porta dos fundos"
             }),
@@ -104,6 +106,7 @@ var lastLog = null;
             contentType: 'application/json',
             url: window.location.origin + "/api/notification/send",
             data:JSON.stringify({
+                topic: "bell_8MHr8wcdedUzzSmVthFM",
                 title: "ArcanaBell",
                 message:"Algum visitante se encontra na entrada do escritório"
             }),

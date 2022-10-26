@@ -25,7 +25,7 @@ exports.send = async (req, res, next) => {
         res.status(500).send("Algo deu errado :(")
     });
     
-    admin.firestore().collection("BellHistory").add({
+    admin.firestore().collection("bell_history").add({
         Entrada: req.body.message.split(" ").reverse()[0],
         Hora: admin.firestore.Timestamp.now()
     })
