@@ -1,29 +1,5 @@
 {
-  "name": "first_ml",
-  "version": "1.0.0",
-  "description": "Tentativas com machine learning usando javascript",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "ml",
-    "javascript",
-    "js",
-    "node",
-    "hello-world"
-  ],
-  "author": "Gustavo Velozo",
-  "license": "ISC",
   "dependencies": {
-    "axios": "^0.21.1",
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1",
-    "firebase-admin": "^10.0.0",
-    "tedious": "^8.2.0",
-    "uuid": "^8.3.2"
-  },
-  "quokka": {
-    "babel": true
+    "firebase-functions": "^4.0.2"
   }
 }
