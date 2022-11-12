@@ -14,13 +14,14 @@ exports.sendNotification = functions.https.onRequest((req, res) => {
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
         "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-ztch5%40arcanabell-6c682.iam.gserviceaccount.com"
     }
-    try{
+    try {
 
         admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
             databaseURL: "https://arcanabell-6c682-default-rtdb.firebaseio.com"
-        })
-    }catch(e){
+        });
+
+    } catch (e) {
         console.log(e)
     }
 
@@ -28,27 +29,43 @@ exports.sendNotification = functions.https.onRequest((req, res) => {
         priority: "high",
         timeToLive: 60 * 60 * 24
     };
-    const registrationToken = req.body.registrationToken
     const options = notification_options
+    try {
 
-    const message = {
-        notification: {
-            title: req.body.title,
-            body: req.body.message
-        }
-    };
 
-    admin.messaging().sendToTopic(req.body.topic, message, options).then(response => {
-        res.json({ result: `Notificação enviada com sucesso!` });
-    }).catch(error => {
-        console.log(error);
+        const bellMac = req.body.topic.split("_")[1]
+
+
+        functions.logger.log("Recebido notificação da campainha: ", bellMac);
+        admin.firestore().collection("bell").doc(bellMac).get().then(async bell => {
+
+            functions.logger.log("Consulta no firestore retornou: ", bell.get("description"));
+
+            const historyItem = await admin.firestore().collection("bell_history").add({
+                bell: bellMac,
+                title: bell.get("description"),
+                users: bell.get("users"),
+                datetime: admin.firestore.Timestamp.now()
+            });
+
+            const message = {
+                notification: {
+                    id: historyItem.id,
+                    title: `ArcanaBell`,
+                    body: `Alguém se encontra na campainha ${bell.get("description")}`
+                }
+            };
+            await admin.messaging().sendToTopic(req.body.topic, message, options).then(response => {
+                res.json({ result: `Notificação enviada com sucesso!` });
+            }).catch(error => {
+                functions.logger.error("Erro: ", error);
+                console.log(error);
+                res.json({ result: `Algo deu errado :(` });
+            });
+
+        });
+    } catch (error) {
+        functions.logger.error("Erro: ", error);
         res.json({ result: `Algo deu errado :(` });
-    });
-
-    admin.firestore().collection("bell_history").add({
-        Entrada: req.body.message.split(" ").reverse()[0],
-        Hora: admin.firestore.Timestamp.now()
-    });
-
-    res.json({ result: `Sucesso!` });
+    }
 });
